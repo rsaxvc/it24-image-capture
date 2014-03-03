@@ -4,7 +4,9 @@
 int main( int nargs, const char * const args[])
 {
 const char * filename;
+const char * outfilename;
 FILE * fp;
+FILE * fp_out;
 int len;
 int numPackets;
 int i,j;
@@ -15,10 +17,27 @@ int charcounts[3][256];
 memset( charcounts, 0x00, sizeof( charcounts ) );
 memset( sums, 0x00, sizeof( sums ) );
 
-if( nargs!=2 )
+if( nargs != 2 && nargs != 3 )
 	{
-	printf("Usage: %s uartdump\n", args[0] );
+	printf(
+		"Usage:\n"
+		"%s uartdump\n"
+		"%s uartdump rawimgout\n", args[0], args[0]
+		);
 	return 1;
+	}
+
+fp_out = NULL;
+outfilename = NULL;
+if( nargs == 3 )
+	{
+	outfilename = args[2];
+	fp_out = fopen( outfilename, "w" );
+	if( fp_out == NULL )
+		{
+		printf("unable to open output file:%s\n",outfilename);
+		return 15;
+		}
 	}
 
 filename = args[1];
@@ -72,6 +91,18 @@ for( i = 0; i < numPackets; ++i )
 	sums[1]+=bytes[1];
 	sums[2]+=bytes[2];
 	printf("%02x %02x %02x\n", bytes[0], bytes[1], bytes[2] );
+
+	if( fp_out )
+		{
+		for( j = 0; j < bytes[2]; ++j )
+			{
+			if( 2 != fwrite( bytes, 1, 2, fp_out ) )
+				{
+				printf("Failed to write output data\n");
+				return 43;
+				}
+			}
+		}
 	}
 
 for( j = 0; j < 3; ++j )
@@ -84,4 +115,8 @@ for( j = 0; j < 3; ++j )
 	}
 
 fclose( fp );
+if( fp_out )
+	{
+	fclose( fp_out );
+	}
 }
