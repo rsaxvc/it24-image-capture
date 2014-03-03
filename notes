@@ -7,3 +7,9 @@ Footer at end of transmission is 2 bytes
 
 No instances yet found where [Filesize minus (header+footer)] was not
 divisible by 3.
+
+Third byte of each packet appears to be a count.
+
+logMenu and logGraph have different numbers of colors.
+    logMenu: White,Red,Blue,Orange
+    logGraph: White, Blue, Red

@@ -67,12 +67,16 @@ for( i = 0; i < numPackets; ++i )
 	charcounts[0][bytes[0]]++;
 	charcounts[1][bytes[1]]++;
 	charcounts[2][bytes[2]]++;
+
+	sums[0]+=bytes[0];
+	sums[1]+=bytes[1];
+	sums[2]+=bytes[2];
 	printf("%02x %02x %02x\n", bytes[0], bytes[1], bytes[2] );
 	}
 
 for( j = 0; j < 3; ++j )
 	{
-	printf("Printing Stats for Column %i\n",j);
+	printf("Printing Stats for Column %i, sum=%i\n",j,sums[j]);
 	for( i = 0; i < 256; ++i )
 		{
 		printf("%02x:%i\n",i,charcounts[j][i]);
