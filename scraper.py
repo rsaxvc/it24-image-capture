@@ -6,6 +6,7 @@ from PIL import Image
 
 parser = argparse.ArgumentParser(description='IT-24 Image Capture Tool')
 parser.add_argument("--port", help="Port name(example:COMA,COM1,/dev/ttyUSB0)")
+parser.add_argument("--prefix", help="Prepend this pattern in front of the captures")
 parser.add_argument("--outputtype", help="png or jpg")
 args = parser.parse_args()
 
@@ -14,6 +15,9 @@ if not args.port:
 
 if not args.outputtype:
 	args.outputtype = "png"
+
+if not args.prefix:
+	args.prefix = ""
 
 import serial
 
@@ -109,7 +113,7 @@ while True:
 			ser.read(2)
 			im = Image.new("RGB", (width, height))
 			im.putdata(pixels)
-			im.save("output."+args.outputtype)
+			im.save(args.prefix+"output."+args.outputtype)
 			state = State.hosed
 		else:
 			state = State.hosed
