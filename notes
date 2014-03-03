@@ -13,3 +13,5 @@ Third byte of each packet appears to be a count.
 logMenu and logGraph have different numbers of colors.
     logMenu: White,Red,Blue,Orange
     logGraph: White, Blue, Red
+
+Format is RLE-RGB565
