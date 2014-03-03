@@ -1,0 +1,9 @@
+Two similar images appear to be the same until the difference in pixels.
+
+Two same-sized wildly different images have different filesizes.
+
+Header at start of transmission is 21 bytes
+Footer at end of transmission is 2 bytes
+
+No instances yet found where [Filesize minus (header+footer)] was not
+divisible by 3.
