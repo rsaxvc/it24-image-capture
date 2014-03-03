@@ -17,20 +17,25 @@ if not args.outputtype:
 	args.outputtype = "png"
 
 if not args.prefix:
-	args.prefix = ""
+	args.prefix = "image_"
 
 import serial
 
 ser = serial.Serial(args.port, "115200", parity=serial.PARITY_NONE)
 
-class State():
-	hosed = 0
-	newline = 1
-	carriage = 2
-	screencomp = 3
-	width = 4
-	height = 5
-	data = 6
+def nextFilename():
+	global args
+	prepath = args.prefix
+	postpath = "." + args.outputtype
+
+	num = 0
+	import os
+	while( True ):
+		path = prepath + str(num).zfill(4) + postpath
+		while( os.path.exists( path ) ):
+			num += 1
+			path = prepath + str(num).zfill(4) + postpath
+		yield path
 
 def charIsInt(c):
 	if( ord(c) >= ord('0') and ord(c) <= ord('9') ):
@@ -62,7 +67,18 @@ def parseRLE( ser, width, height ):
 		numLoops += 1
 	return pixels
 
+class State():
+	hosed = 0
+	newline = 1
+	carriage = 2
+	screencomp = 3
+	width = 4
+	height = 5
+	data = 6
+
 state = State.hosed
+filenames = nextFilename()
+
 while True:
 	if( state == State.hosed ):
 		width = 0
@@ -113,7 +129,9 @@ while True:
 			ser.read(2)
 			im = Image.new("RGB", (width, height))
 			im.putdata(pixels)
-			im.save(args.prefix+"output."+args.outputtype)
+			filename = filenames.next()
+			im.save(filename)
+			print "...saved to",filename
 			state = State.hosed
 		else:
 			state = State.hosed
