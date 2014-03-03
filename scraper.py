@@ -2,9 +2,10 @@
 
 #get all the arguments with argparse
 import argparse
+from PIL import Image
+
 parser = argparse.ArgumentParser(description='IT-24 Image Capture Tool')
 parser.add_argument("--port", help="Port name(example:COMA,COM1,/dev/ttyUSB0)")
-#parser.add_argument("--parity", help="none,even,odd")
 parser.add_argument("--outputtype", help="png or jpg")
 args = parser.parse_args()
 
@@ -32,16 +33,28 @@ def charIsInt(c):
 		return True
 	return False
 
+def RGB565_to_RGB888( pixel ):
+	red   = ((pixel & 0xf800) >> 11)<<3
+	red  |= red >> 5
+	green = ((pixel & 0x07e0) >>  5)<<2
+	green|= green >> 5
+	blue   = ((pixel & 0x001f) >>  0)<<3
+	blue |= blue >> 5
+	return (red,green,blue)
+
 def parseRLE( ser, width, height ):
 	pixels = list()
 	numPixels = 0
 	numLoops = 0
 	totalPixels = width*height
 	while( numPixels < totalPixels ):
-		pxl1=ser.read()
-		pxl2=ser.read()
-		count=ser.read()
-		numPixels += ord(count)
+		pxl1=ord(ser.read())
+		pxl2=ord(ser.read())
+		pxl = RGB565_to_RGB888( ( pxl1 << 8 ) | pxl2 )
+		count=ord(ser.read())
+		for i in xrange(0,count):
+			pixels.append(pxl)
+		numPixels += count
 		numLoops += 1
 	return pixels
 
@@ -94,6 +107,9 @@ while True:
 			state = State.data
 			pixels = parseRLE( ser, width, height )
 			ser.read(2)
+			im = Image.new("RGB", (width, height))
+			im.putdata(pixels)
+			im.save("output."+args.outputtype)
 			state = State.hosed
 		else:
 			state = State.hosed
