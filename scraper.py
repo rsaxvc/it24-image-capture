@@ -54,7 +54,6 @@ def RGB565_to_RGB888( pixel ):
 def parseRLE( ser, width, height ):
 	pixels = list()
 	numPixels = 0
-	numLoops = 0
 	totalPixels = width*height
 	while( numPixels < totalPixels ):
 		pxl1=ord(ser.read())
@@ -64,7 +63,6 @@ def parseRLE( ser, width, height ):
 		for i in xrange(0,count):
 			pixels.append(pxl)
 		numPixels += count
-		numLoops += 1
 	return pixels
 
 class State():
