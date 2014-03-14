@@ -8,11 +8,12 @@ parser = argparse.ArgumentParser(description='IT-24 Image Capture Tool')
 parser.add_argument("--port", help="Port name(example:COMA,COM1,/dev/ttyUSB0)")
 parser.add_argument("--prefix", help="Prepend this pattern in front of the captures")
 parser.add_argument("--outputtype", help="png or jpg")
-parser.add_argument("--baud", help="38400 for older units 115200(default) for IT-24")
+parser.add_argument("--baud", help="38400 for black&white units 115200(default) for IT-24")
 args = parser.parse_args()
 
 if not args.port:
 	args.port = "/dev/ttyUSB0"
+	print "No port specified, assuming",args.port,"override with --port"
 
 if not args.outputtype:
 	args.outputtype = "png"
