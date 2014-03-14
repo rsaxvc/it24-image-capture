@@ -174,12 +174,20 @@ while True:
 			state = State.data
 			if( mode == Mode.RLE565 ):
 				pixels = parseRLE( ser, width, height )
+				ser.read(2)#eat a carriage-return and new-line
 			elif( mode == Mode.BitPerPixel ):
 				pixels = parseBPP( ser, width, height )
-				print "parseBPP"
+				print "parsedBPP"
+
+				#consume extra lines of '0', and one carriage-return
+				byte = '0'
+				while byte == '0':
+					byte = ser.read(1)
+
+				#eat a new-line
+				ser.read(1)
 			else:
 				print "Unknown image format"
-			ser.read(2)
 			im = Image.new("RGB", (width, height))
 			im.putdata(pixels)
 			filename = filenames.next()
