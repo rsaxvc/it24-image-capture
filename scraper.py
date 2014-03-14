@@ -191,6 +191,8 @@ while True:
 			im = Image.new("RGB", (width, height))
 			im.putdata(pixels)
 			filename = filenames.next()
+			if( mode == Mode.BitPerPixel ):
+				im=im.rotate(270)
 			im.save(filename)
 			print "...saved to",filename
 			state = State.hosed
