@@ -1,0 +1,7 @@
+header is 14 bytes :0x0D0Ascreenshot<colon><space>
+2128 bytes of data
+footer is 2 bytes 0x0D0A
+
+LCD is 128x64, which is 8192 bytes
+
+baud is 38400
