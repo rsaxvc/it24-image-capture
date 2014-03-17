@@ -1,1 +1,25 @@
-This is a tool for scraping images from RigExpert IT-24(and maybe other) analyzers.
+This is a tool for scraping images from RigExpert IT-24, AA-170, and maybe other analyzers.
+Once started, it'll log all images from the analyzer sent over USB to a series of
+image files, until terminated.
+
+Before using, you need to do the following:
+	Install packages listed in DEPENDENCIES
+	
+Before using, you need to know the following:
+	Analyzer Baud Rate
+	USB<->Serial port name
+
+To list program options, run `python scraper.py --help`
+
+Important Options:
+	--port <portname>
+		This tells the program how to connect to the analyzer.
+		Windows: COMn
+		Linux: /dev/ttyUSBn
+
+	--baud <baudrate>
+		<baudrate> needs to match the rate for your analyzer. AA-170 uses 38400 and
+		IT-24 uses 115200(if --baud is not used, 115200 is assumed)
+
+
+To close, press Control+'C'
